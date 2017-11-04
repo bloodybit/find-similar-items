@@ -14,6 +14,8 @@ import java.util.Map;
 public class Shingling {
 
     private Map<Integer, ArrayList<Integer>> shingles = new HashMap();
+    // Signature matrix
+    private Integer[][] signatureMatrix;
     private int k;
     private int numberOfDocuments = 0;
 
@@ -82,10 +84,10 @@ public class Shingling {
         return (float) shieldsInCommon/ (float) shieldsInTotal;
     }
 
-    public void minHashing(int numberOfHashFunction){
+    public Integer[][] minHashing(int numberOfHashFunction){
 
         // Signature matrix
-        int[][] signatureMatrix = new int[numberOfHashFunction][this.shingles.size()];
+        this.signatureMatrix = new Integer[numberOfHashFunction][this.numberOfDocuments];
 
 
         // creating a matrix that allows me to create random hash functions and to reuse the during my process
@@ -98,37 +100,54 @@ public class Shingling {
                 hashFunctionParameters[i][j] = 1 + (int)(Math.random() * ((100 - 1) + 1));
             }
         }
-        printMatrix(hashFunctionParameters); // print the matrix for debugging
 
         // implement the minHashing algorithm according to slides
-        for (Map.Entry<Integer, ArrayList<Integer>> shingle: this.shingles.entrySet()) {
+        for (Map.Entry<Integer, ArrayList<Integer>> row: this.shingles.entrySet()) {
             // compute the hashfunctions and save the result
             int[] hashFunctionsRowResults = new int[hashFunctionParameters.length];
 
             for (int i = 0; i < hashFunctionParameters.length; i++) {
                 hashFunctionsRowResults[i] = randomHashFunction(
-                        shingle.getKey(),
+                        row.getKey(),
                         hashFunctionParameters[i][0],
                         hashFunctionParameters[i][1],
                         hashFunctionParameters[i][2]);
-                System.out.println(hashFunctionsRowResults[i]);
+            }
+
+            // compute each column (document) and save the result in the matrix
+            for (int i = 0; i < this.numberOfDocuments; i++) {
+                if(row.getValue().contains(i+1)) { // add 1 since I save 1 and not 0 as first document
+                    for (int j = 0; j < hashFunctionsRowResults.length; j++) {
+                        if (this.signatureMatrix[j][i] == null || hashFunctionsRowResults[j] < this.signatureMatrix[j][i]) {
+                            this.signatureMatrix[j][i] = hashFunctionsRowResults[j];
+                        }
+                    }
+                }
             }
         }
+//        printMatrix(signatureMatrix);
+        return this.signatureMatrix;
     }
 
     private int randomHashFunction(int shingle, int a, int b, int mod) {
-        System.out.println(shingle);
-        System.out.println(a);
-        System.out.println(b);
-        System.out.println(mod);
+        return (int) (((new Integer(a).longValue() * new Integer(shingle).longValue()) + new Integer(b).longValue()) % new Integer(mod).longValue());
+    }
 
-        long r = (long) shingle * (long) a;
-        int r2 = shingle * a;
-        System.out.println(r);
-        System.out.println(r2);
-        System.out.println();
-        System.out.println();
-        return ((a * shingle) + b) % mod;
+    public float compareSignatures(int set1, int set2) {
+
+        int shieldsInCommon = 0; // Shields that are in both the documents
+        int shieldsInTotal = this.signatureMatrix.length; // number of hash functions in the signature
+
+        for (int i = 0; i < this.signatureMatrix.length; i++) {
+            if (signatureMatrix[i][set1-1] == signatureMatrix[i][set2-1]) {
+                shieldsInCommon++;
+            }
+        }
+
+        System.out.println("shileds in common " + shieldsInCommon);
+        System.out.println("shields in total " + shieldsInTotal);
+
+        return (float) shieldsInCommon/ (float) shieldsInTotal;
     }
 
 
@@ -140,7 +159,7 @@ public class Shingling {
         return numberOfDocuments;
     }
 
-    private void printMatrix(int[][] matrix) {
+    private void printMatrix(Integer[][] matrix) {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 System.out.print(matrix[i][j] + " ");

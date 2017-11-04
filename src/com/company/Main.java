@@ -56,7 +56,9 @@ public class Main {
 
         Map<Integer, ArrayList<Integer>> shingles = shingling.getShingles();
         System.out.println(shingles);
-        System.out.println(shingling.compareSets(3,2));
-        shingling.minHashing(10);
+        System.out.println(shingling.compareSets(1,2));
+        Integer[][] signature = shingling.minHashing(100);
+
+        System.out.println(shingling.compareSignatures(1, 2));
     }
 }
