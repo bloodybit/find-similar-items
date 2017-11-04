@@ -121,6 +121,11 @@ public class Shingling {
         System.out.println(a);
         System.out.println(b);
         System.out.println(mod);
+
+        long r = (long) shingle * (long) a;
+        int r2 = shingle * a;
+        System.out.println(r);
+        System.out.println(r2);
         System.out.println();
         System.out.println();
         return ((a * shingle) + b) % mod;
