@@ -13,6 +13,7 @@ public class Main {
 
         // Read the file, I get each review as a document
         String csvFile = "/Users/riccardosibani/Documents/University/KTH/Data Mining/input/dataset3";
+//        String csvFile = "/Users/riccardosibani/Documents/University/KTH/Data Mining/input/dataset2";
         BufferedReader br = null;
         String line = "";
         String cvsSplitBy = "\n";
@@ -53,7 +54,8 @@ public class Main {
             }
         }
 
-        Map<String, ArrayList<Integer>> shingles = shingling.getShingles();
+        Map<Integer, ArrayList<Integer>> shingles = shingling.getShingles();
         System.out.println(shingles);
+        System.out.println(shingling.compareSets(3,2));
     }
 }

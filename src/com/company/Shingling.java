@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class Shingling {
 
-    private Map<String, ArrayList<Integer>> shingles = new HashMap();
+    private Map<Integer, ArrayList<Integer>> shingles = new HashMap();
     private int k;
     private int numberOfDocuments = 0;
 
@@ -32,8 +32,7 @@ public class Shingling {
         for (int i = 0; i <fullText.length()-k; i++) {
 
             // get the current shingle and hash it
-            String currentShingle = fullText.substring(i, i+k);
-            System.out.println(currentShingle);
+            Integer currentShingle = fullText.substring(i, i+k).hashCode();
 
             if(this.shingles.containsKey(currentShingle)) {
                 // if the shingle is already in the map, get the arrayList with all the documents that have that shingle
@@ -54,7 +53,26 @@ public class Shingling {
         }
     }
 
-    public Map<String, ArrayList<Integer>> getShingles() {
+    public float compareSets(Integer set1, Integer set2) {
+
+        int shieldsInCommon = 0;
+        int shieldsInTotal = 0;
+
+        for (Map.Entry<Integer, ArrayList<Integer>> shingle: this.shingles.entrySet()) {
+            if (shingle.getValue().contains(set1) && shingle.getValue().contains(set2)) {
+                shieldsInCommon++;
+            }
+            if (shingle.getValue().contains(set1) || shingle.getValue().contains(set2)) {
+                shieldsInTotal++;
+            }
+        }
+
+        System.out.println(shieldsInCommon);
+        System.out.println(shieldsInTotal);
+        return (float) shieldsInCommon/ (float) shieldsInTotal;
+    }
+
+    public Map<Integer, ArrayList<Integer>> getShingles() {
         return shingles;
     }
 
