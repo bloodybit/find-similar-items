@@ -1,6 +1,7 @@
 package com.company;
 
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,8 +97,9 @@ public class Shingling {
 
         for (int i = 0; i < hashFunctionParameters.length; i++) {
 
+            // for the third element I should get a prime number. Explore possibilities in this sense
             for (int j = 0; j < hashFunctionParameters[i].length; j++) {
-                hashFunctionParameters[i][j] = 1 + (int)(Math.random() * ((100 - 1) + 1));
+                hashFunctionParameters[i][j] = 1 + (int)(Math.random() * ((1048576 - 1) + 1));
             }
         }
 
@@ -125,12 +127,16 @@ public class Shingling {
                 }
             }
         }
-//        printMatrix(signatureMatrix);
+//        printMatrix(signatureMatritrix);
         return this.signatureMatrix;
     }
 
     private int randomHashFunction(int shingle, int a, int b, int mod) {
-        return (int) (((new Integer(a).longValue() * new Integer(shingle).longValue()) + new Integer(b).longValue()) % new Integer(mod).longValue());
+        return ((BigInteger.valueOf(a).multiply(BigInteger.valueOf(shingle))).add(BigInteger.valueOf(b))).mod(BigInteger.valueOf(mod)).intValue();
+    }
+
+    public Integer[][] getSignatureMatrix() {
+        return this.signatureMatrix;
     }
 
     public float compareSignatures(int set1, int set2) {
