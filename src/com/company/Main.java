@@ -81,5 +81,18 @@ public class Main {
         System.out.println("LSH COMPARES");
         System.out.println(lsh.findCandidates(0.50));
 
+        // TODOFILIPPO
+        // Can you compare the couples of value returned in the array?
+        // it might be that sometimes are three but don't worry
+        // eg
+        // [ - 3 - 4,  - 5 - 10,  - 2 - 8]
+        // compare
+        // 3 with 4
+        // 5 with 10
+        // and 2 with 8
+        // might be that you have to subtract a number eg 3 - 4 becomes 2-3 I don't remember
+        // if I was adding it before or not in the function
+        // i did it to aggirare il DS_STore ma alla fine non serve, vedi tu PLEEEEAAASE
+
     }
 }
