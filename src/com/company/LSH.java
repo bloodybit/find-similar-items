@@ -15,7 +15,7 @@ public class LSH {
     }
 
     public ArrayList<String> findCandidates(double treshold) {
-        System.out.println(signature.length);
+
         // I assume I create 100 hashFunction and therefore 100 rows
         // I have 20 bands of 5 rows each
 
@@ -50,13 +50,14 @@ public class LSH {
         }
 
         // Check the buckets.
-//        for (Map.Entry<Integer, ArrayList<Integer>> bucket: buckets.entrySet()) {
-//            for (Integer element: bucket.getValue()) {
-//                System.out.print(element + "   ");
-//            }
-//            System.out.println();
-//        }
+        /*for (Map.Entry<Integer, ArrayList<Integer>> bucket: buckets.entrySet()) {
+            for (Integer element: bucket.getValue()) {
+                System.out.print(element + "   ");
+            }
+            System.out.println();
+        }
 
+        System.out.println(buckets.entrySet().size());*/
 //        Map<Integer, ArrayList<Integer>> candidatesCompare = new HashMap();
         ArrayList<String> candidatesCompare = new ArrayList<>();
         for (Map.Entry<Integer, ArrayList<Integer>> bucket: buckets.entrySet()) {
@@ -64,7 +65,10 @@ public class LSH {
                 String compares = "";
 
                 for (int i = 0; i < bucket.getValue().size(); i++) {
-                    compares += " - " + bucket.getValue().get(i);
+                    if (i != 0) {
+                        compares += "-";
+                    }
+                    compares += bucket.getValue().get(i);
                 }
                 if (!candidatesCompare.contains(compares)) {
                     candidatesCompare.add(compares);
@@ -72,5 +76,9 @@ public class LSH {
             }
         }
         return candidatesCompare;
+    }
+
+    public int getSignatureLenght() {
+        return this.signature.length;
     }
 }

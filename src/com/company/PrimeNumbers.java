@@ -37,12 +37,10 @@ public class PrimeNumbers {
                 String[] numbers = line.split("\\s");
                 for (String number: numbers) {
 
-                    try
-                    {
+                    try {
                         primeNumbers.add(new Integer(number));
                     }
-                    catch (NumberFormatException nfe)
-                    {
+                    catch (NumberFormatException nfe) {
                         // not a number
                     }
                 }
