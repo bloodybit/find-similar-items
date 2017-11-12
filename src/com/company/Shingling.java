@@ -15,11 +15,40 @@ import java.util.Map;
  */
 public class Shingling {
 
+
+    /**
+     * byWord: boolean flag use to create shingles by word or by characters
+     */
     private boolean byWord;
+
+    /**
+     *  k: the size of the shingles (in chars or words, depending on the byWord flag)
+     *  numberOfDocuments: a counter of docuemnts that have been ingested by the class
+     */
     private int k, numberOfDocuments;
+
+    /**
+     * shingles: a map of shingles
+     *
+     * key: shingle hash code
+     * values: document ids having that shingle in their sets
+     *
+     */
     private Map<Integer, ArrayList<Integer>> shingles;
+
+
+    /**
+     * signatureMatrix: matrix of signatures that will be used by the LSH object
+     */
     private Integer[][] signatureMatrix;
 
+
+    /**
+     * Shingling constructor
+     *
+     * @param k
+     * @param byWord
+     */
     public Shingling(Integer k, boolean byWord) {
         // Inizialize the shingle with a map
         // The map is shared by all the documents
@@ -40,6 +69,7 @@ public class Shingling {
         // Increase the number of documents
         this.numberOfDocuments++;
 
+        // if the shingling has to be done by word
         if (this.byWord) {
             System.out.println("Shingling by words...");
             ArrayList<String> words = new ArrayList<String>();
@@ -59,6 +89,7 @@ public class Shingling {
 
                 String kWords = "";
 
+                // get the next k words and concatenate them
                 for(int j=i; j<i+this.k; j++) {
                     kWords += words.get(j);
                 }
@@ -86,6 +117,7 @@ public class Shingling {
 
 
         } else {
+            // the shingling has to be done by character
             for (int i = 0; i <fullText.length()-k; i++) {
 
                 // get the current shingle and hash it
@@ -112,8 +144,6 @@ public class Shingling {
                 }
             }
         }
-
-
     }
 
 
@@ -128,8 +158,8 @@ public class Shingling {
      */
     public float jaccardSimilarity(Integer set1, Integer set2) {
 
-        int shinglesInCommon = 0; // Shields that are in both the documents
-        int shinglesInTotal = 0; // distinct shields that the two documents have
+        int shinglesInCommon = 0; // Shingles intersection
+        int shinglesInTotal = 0; // Shingles union
 
         for (Map.Entry<Integer, ArrayList<Integer>> shingle: this.shingles.entrySet()) {
 
@@ -146,6 +176,7 @@ public class Shingling {
 
         System.out.println("Shingles in common:\t" + shinglesInCommon);
         System.out.println("Shingles in total:\t" + shinglesInTotal);
+        // sets ratio
         return (float) shinglesInCommon/ (float) shinglesInTotal;
     }
 
@@ -198,7 +229,7 @@ public class Shingling {
                 }
             }
         }
-//        printMatrix(signatureMatritrix);
+        // printMatrix(this.signatureMatritrix);
         return this.signatureMatrix;
     }
 
@@ -216,6 +247,12 @@ public class Shingling {
         return ((BigInteger.valueOf(a).multiply(BigInteger.valueOf(shingle))).add(BigInteger.valueOf(b))).mod(BigInteger.valueOf(mod)).intValue();
     }
 
+
+    /**
+     * getSignatureMatrix getter
+     *
+     * @return signatureMatrix
+     */
     public Integer[][] getSignatureMatrix() {
         return this.signatureMatrix;
     }
@@ -224,14 +261,13 @@ public class Shingling {
     /**
      * compareSignatures
      *
-     *
      * @param set1
      * @param set2
      * @return
      */
     public float compareSignatures(int set1, int set2) {
 
-        int signaturesInCommon = 0; // Shields that are in both the documents
+        int signaturesInCommon = 0; // Signatures that are in both the documents
         int signaturesInTotal = this.signatureMatrix.length; // number of hash functions in the signature
 
         for (int i = 0; i < this.signatureMatrix.length; i++) {
@@ -266,9 +302,11 @@ public class Shingling {
 
     public String getInfo() {
         String info = "";
-        info += "K:\t\t\t\t" + this.k;
-        info += "\nNUM OF DOCS:\t" + this.numberOfDocuments;
-        info += "\nSIZE:\t\t\t" + this.shingles.size();
+        info += "K: " + this.k;
+        info += "\nBY WORD: " + this.byWord;
+        info += "\nNUM OF DOCS: " + this.numberOfDocuments;
+        info += "\nSIZE: " + this.shingles.size();
+
         return info;
     }
     /**

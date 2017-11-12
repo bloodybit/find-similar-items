@@ -10,23 +10,38 @@ public class LSH {
     private Integer[][] signature = null;
     private Map<Integer, ArrayList<Integer>> buckets = new HashMap();
 
+
+    /**
+     * Constructor
+     *
+     * It receives a matrix of signatures: each column represent a document
+     * @param minHashSignature
+     */
     public LSH(Integer[][] minHashSignature) {
         this.signature = minHashSignature;
     }
 
+    /**
+     *
+     * findCandidates method
+     *
+     * This method applies the algorithm seen during the lectures to create buckets and find similarities
+     * @param treshold
+     * @return
+     */
     public ArrayList<String> findCandidates(double treshold) {
 
         // I assume I create 100 hashFunction and therefore 100 rows
         // I have 20 bands of 5 rows each
 
-        int b = 20;
-        int r = 5;
+        int b = 20; // bands
+        int r = 5; // rows per band
         int numberOfElements = signature[0].length;
 
 
-        // Per each band
+        // For each band
         for (int i = 0; i < signature.length-r; i=i+r) {
-            // per each column (document)
+            // For each column (document) inside the band
             for (int j = 0; j < numberOfElements; j++) {
                 String columnString = "";
                 // Create a string which is a concatenation of all the signature in that band
@@ -49,16 +64,7 @@ public class LSH {
             }
         }
 
-        // Check the buckets.
-        /*for (Map.Entry<Integer, ArrayList<Integer>> bucket: buckets.entrySet()) {
-            for (Integer element: bucket.getValue()) {
-                System.out.print(element + "   ");
-            }
-            System.out.println();
-        }
-
-        System.out.println(buckets.entrySet().size());*/
-//        Map<Integer, ArrayList<Integer>> candidatesCompare = new HashMap();
+        // look inside the buckets to check if some of the documents ended up in the same.
         ArrayList<String> candidatesCompare = new ArrayList<>();
         for (Map.Entry<Integer, ArrayList<Integer>> bucket: buckets.entrySet()) {
             if(bucket.getValue().size()>1) {
@@ -78,6 +84,7 @@ public class LSH {
         return candidatesCompare;
     }
 
+    // utility method to get the lenght of the matrix
     public int getSignatureLenght() {
         return this.signature.length;
     }
