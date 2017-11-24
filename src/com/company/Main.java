@@ -164,7 +164,7 @@ public class Main {
 
         testJaccardSimilarity(shingling, set1, set2);
         // min hash: create the signatures for all the documents
-        Integer[][] signature = shingling.minHashing(1000);
+        Integer[][] signature = shingling.minHashing(100);
         testSignatures(shingling, set1, set2);
 
 
